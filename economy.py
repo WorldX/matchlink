@@ -27,6 +27,10 @@ def minute_tokens(minutes):
 
 
 def settle_chat(duration_seconds, exit_type='normal'):
+    """
+    exit_type: normal | decline | early_hangup | mid_exit | partner_left
+    Returns dict with tokensDelta, giftsEarned, penalty, breakdown.
+    """
     minutes = duration_seconds / 60
     earned = minute_tokens(minutes)
     gifts = []
