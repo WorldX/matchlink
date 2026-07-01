@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#5b8def" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>MatchLink</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="logo-dot"></span>
+        <span class="brand">MatchLink</span>
+      </div>
+      <div class="topbar-right">
+        <div class="token-pill" id="token-pill">
+          <span class="coin">🪙</span>
+          <span id="token-balance">100</span>
+        </div>
+        <div class="live-pill"><span class="dot"></span><span id="stat-online">0</span></div>
+      </div>
+    </header>
+
+    <!-- MATCH VIEW -->
+    <section class="view active" id="view-match" data-view="match">
+      <div class="video-stack">
+        <div class="video-card remote">
+          <video id="remote-video" autoplay playsinline></video>
+          <div class="video-badge">Stranger</div>
+          <div class="overlay" id="remote-overlay">
+            <div class="pulse-ring" id="pulse-ring"></div>
+            <p class="overlay-title" id="status-text">Ready to match</p>
+            <p class="overlay-sub" id="status-sub"></p>
+            <p class="chat-timer hidden" id="chat-timer">00:00</p>
+          </div>
+        </div>
+        <div class="video-card local pip">
+          <video id="local-video" autoplay playsinline muted></video>
+          <div class="video-badge">You</div>
+        </div>
+      </div>
+
+      <div class="match-info hidden" id="match-info">
+        <div class="match-score-bar" id="match-score-bar"></div>
+        <div class="shared-row" id="shared-row"></div>
+      </div>
+
+      <div class="action-bar" id="action-bar">
+        <button class="act act-primary" id="btn-start">Start</button>
+        <button class="act act-secondary hidden" id="btn-next">Next</button>
+        <button class="act act-decline hidden" id="btn-decline">Decline</button>
+        <button class="act act-stop hidden" id="btn-stop">Exit</button>
+        <button class="act act-icon hidden" id="btn-mute">🎤</button>
+        <button class="act act-icon hidden" id="btn-cam">📷</button>
+      </div>
+
+      <div class="chat-drawer hidden" id="chat-drawer">
+        <div class="chat-msgs" id="chat-msgs"></div>
+        <form class="chat-form" id="chat-form">
+          <input type="text" id="chat-input" placeholder="Message…" autocomplete="off" />
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- PROFILE VIEW -->
+    <section class="view" id="view-profile" data-view="profile">
+      <div class="page-head">
+        <h1>Your Profile</h1>
+        <p>Edit how others find and match with you</p>
+      </div>
+      <form class="form-card" id="profile-form">
+        <label class="field">
+          <span>Display name</span>
+          <input type="text" id="p-displayName" maxlength="32" placeholder="Your name" />
+        </label>
+        <label class="field">
+          <span>Bio</span>
+          <textarea id="p-bio" rows="2" maxlength="200" placeholder="A line about you…"></textarea>
+        </label>
+        <label class="field">
+          <span>Country</span>
+          <select id="p-country">
+            <option value="">Any</option>
+            <option value="US">United States</option>
+            <option value="GB">United Kingdom</option>
+            <option value="CA">Canada</option>
+            <option value="AU">Australia</option>
+            <option value="DE">Germany</option>
+            <option value="FR">France</option>
+            <option value="IN">India</option>
+            <option value="BR">Brazil</option>
+            <option value="MX">Mexico</option>
+            <option value="JP">Japan</option>
+            <option value="KR">South Korea</option>
+            <option value="NG">Nigeria</option>
+            <option value="ZA">South Africa</option>
+            <option value="PH">Philippines</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Language</span>
+          <select id="p-language">
+            <option value="">Any</option>
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="pt">Portuguese</option>
+            <option value="hi">Hindi</option>
+            <option value="ja">Japanese</option>
+            <option value="ko">Korean</option>
+            <option value="ar">Arabic</option>
+            <option value="zh">Chinese</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Age range</span>
+          <select id="p-ageRange">
+            <option value="">Any</option>
+            <option value="18-24">18–24</option>
+            <option value="25-34">25–34</option>
+            <option value="35-44">35–44</option>
+            <option value="45+">45+</option>
+          </select>
+        </label>
+        <div class="field">
+          <span>Interests</span>
+          <div class="tag-grid" id="p-interests"></div>
+          <input type="text" class="tag-add" id="p-custom-interest" placeholder="Add custom, press Enter" />
+        </div>
+        <div class="field">
+          <span>Looking for</span>
+          <div class="tag-grid" id="p-looking"></div>
+          <input type="text" class="tag-add" id="p-custom-looking" placeholder="Add custom, press Enter" />
+        </div>
+        <div class="field-group">
+          <span class="group-label">Match preferences</span>
+          <label class="check"><input type="checkbox" id="p-sameCountry" /> Same country only</label>
+          <label class="check"><input type="checkbox" id="p-sharedInterest" /> Must share 1+ interest</label>
+          <label class="field">
+            <span>Min compatibility</span>
+            <select id="p-minScore">
+              <option value="0">Any</option>
+              <option value="30">Fair (30+)</option>
+              <option value="60">Good (60+)</option>
+              <option value="90">Strong (90+)</option>
+            </select>
+          </label>
+        </div>
+        <button type="submit" class="save-btn">Save profile</button>
+        <p class="save-status" id="save-status"></p>
+      </form>
+    </section>
+
+    <!-- WALLET VIEW -->
+    <section class="view" id="view-wallet" data-view="wallet">
+      <div class="page-head">
+        <h1>Wallet &amp; Gifts</h1>
+        <p>Longer chats earn more — leaving early costs tokens</p>
+      </div>
+      <div class="wallet-balance">
+        <span class="wallet-amount" id="wallet-tokens">100</span>
+        <span class="wallet-label">tokens</span>
+      </div>
+      <div class="rules-card">
+        <div class="rule">+5 tokens per minute chatting</div>
+        <div class="rule">+ gift bonuses at milestones</div>
+        <div class="rule warn">−8 decline · −20 early exit · −12 mid-chat leave</div>
+      </div>
+      <h2 class="section-title">8 Gift Awards</h2>
+      <div class="gift-grid" id="gift-grid"></div>
+      <h2 class="section-title">Your Collection</h2>
+      <div class="collection" id="gift-collection">
+        <p class="empty">Chat longer to earn gifts</p>
+      </div>
+      <div class="settlement-toast hidden" id="settlement-toast"></div>
+    </section>
+
+    <!-- ADMIN VIEW -->
+    <section class="view" id="view-admin" data-view="admin">
+      <div class="page-head">
+        <h1>Admin Panel</h1>
+        <p>User domain · device · IP tracking</p>
+      </div>
+      <div class="admin-stats" id="admin-stats"></div>
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="admin-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>IP</th>
+              <th>Device</th>
+              <th>Tokens</th>
+              <th>Chats</th>
+            </tr>
+          </thead>
+          <tbody id="admin-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <nav class="bottom-nav" id="bottom-nav">
+      <button class="nav-btn active" data-nav="match">
+        <span class="nav-icon">📹</span><span>Match</span>
+      </button>
+      <button class="nav-btn" data-nav="profile">
+        <span class="nav-icon">👤</span><span>Profile</span>
+      </button>
+      <button class="nav-btn" data-nav="wallet">
+        <span class="nav-icon">🎁</span><span>Wallet</span>
+      </button>
+      <button class="nav-btn hidden" data-nav="admin" id="nav-admin">
+        <span class="nav-icon">⚙️</span><span>Admin</span>
+      </button>
+    </nav>
+  </div>
+
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
